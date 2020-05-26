@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin =  require('html-webpack-plugin');
 const MiniCss = require('mini-css-extract-plugin')
 const outputPath =  path.resolve(__dirname,'dist');
+const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -41,6 +42,15 @@ module.exports = {
     new MiniCss({
       filename:'[name].[hash].css'
     })
-  ]
+  ],
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {drop_console: true}
+        }
+      })
+    ],
+  },
 
 }
