@@ -3,6 +3,7 @@ const HtmlWebpackPlugin =  require('html-webpack-plugin');
 const MiniCss = require('mini-css-extract-plugin')
 const outputPath =  path.resolve(__dirname,'dist');
 const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -49,7 +50,8 @@ module.exports = {
         terserOptions: {
           compress: {drop_console: true}
         }
-      })
+      }),
+      new OptimizeCSSAssetsPlugin({})
     ],
   },
 
