@@ -1,59 +1,70 @@
 const path = require('path');
-const HtmlWebpackPlugin =  require('html-webpack-plugin');
-const MiniCss = require('mini-css-extract-plugin')
-const outputPath =  path.resolve(__dirname,'dist');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCss = require('mini-css-extract-plugin');
+
+const outputPath = path.resolve(__dirname, 'dist');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename:'main.js',
-    path:outputPath
+    filename: 'main.js',
+    path: outputPath,
   },
-  module:{
-    rules:[
-      {test: /\.css$/,
-      use:[MiniCss.loader,'css-loader']
-  },
-  {
+  module: {
+    rules: [
+      {
+        enforce: 'pre',
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCss.loader, 'css-loader'],
+      },
+      {
         test: /\.(jpe?g|png|gif|svg|ico)$/i,
         loader: 'url-loader',
-        options:{
-          limit:2048,
-          name:'./image/[name].[ext]'
-        }
-    },
-    { test: /\.jsx?$/,
-      exclude: /node_modules/, 
-      loader: "babel-loader" },
+        options: {
+          limit: 2048,
+          name: './image/[name].[ext]',
+        },
+      },
       {
-        test:/\.html$/,
-        loader:'html-loader'
-      }
-    ]
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader',
+      },
+    ],
   },
-  devServer:{
-    contentBase: outputPath
+  devServer: {
+    contentBase: outputPath,
   },
-  plugins:[
+  plugins: [
     new HtmlWebpackPlugin({
-      template:'./src/index.html',
-      filename:'./index.html'
+      template: './src/index.html',
+      filename: './index.html',
     }),
     new MiniCss({
-      filename:'[name].[hash].css'
-    })
+      filename: '[name].[hash].css',
+    }),
   ],
   optimization: {
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-          compress: {drop_console: true}
-        }
+          compress: { drop_console: true },
+        },
       }),
-      new OptimizeCSSAssetsPlugin({})
+      new OptimizeCSSAssetsPlugin({}),
     ],
   },
-  devtool:'eval-source-map'
+  devtool: 'eval-source-map',
 
-}
+};
